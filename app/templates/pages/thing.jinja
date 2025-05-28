@@ -1,0 +1,34 @@
+{% extends 'pages/base.jinja' %}
+
+{% block title %}
+
+    Flask and Turso DB Demo - Single Thing
+
+{% endblock %}
+
+
+{% block content %}
+
+    <section id="things">
+
+        <article>
+
+            <header>
+                <h4>{{ thing.name }}</h4>
+            </header>
+
+            <p>{{ thing.description }}</p>
+
+            <p>Cost <strong>${{ thing.price }}</strong></p>
+
+            <p>Rating <strong>{{ thing.rating }}</strong> / 5</p>
+
+            <footer>
+                <a role="button" href="/delete/{{ thing.id }}">Delete</a>
+            </footer>
+
+        </article>
+
+    </section>
+
+{% endblock %}
