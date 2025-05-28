@@ -5,6 +5,7 @@ from libsql_client  import create_client_sync
 from dotenv         import load_dotenv
 import os
 
+
 # Load Turso environment variables from the .env file
 load_dotenv()
 TURSO_URL = os.getenv("TURSO_URL")
@@ -22,11 +23,8 @@ client = None
 #-----------------------------------------------------------
 def connect_db():
     global client
-    # Not connected yet?
     if client == None:
-        # No, so make the connection to Turso
         client = create_client_sync(url=TURSO_URL, auth_token=TURSO_KEY)
-    # Pass the connection back
     return client
 
 
@@ -35,33 +33,30 @@ def connect_db():
 #-----------------------------------------------------------
 @app.get("/")
 def home():
-    client = connect_db()
-    result = client.execute("SELECT * FROM things")
-
-    print(result.rows)
-
-    return render_template("pages/home.jinja", things=result.rows)
+    return render_template("pages/home.jinja")
 
 
 #-----------------------------------------------------------
 # Thing details page
 #-----------------------------------------------------------
 @app.get("/thing/<int:id>")
-def showThing(id):
-    client = connect_db()
-    result = client.execute("SELECT * FROM things WHERE id=?", [id])
+def show_thing(id):
+    return render_template("pages/thing.jinja")
 
-    return render_template("pages/thing.jinja", thing=result.rows[0])
+
+#-----------------------------------------------------------
+# New thing form page
+#-----------------------------------------------------------
+@app.get("/new")
+def new_thing():
+    return render_template("pages/thing-form.jinja")
 
 
 #-----------------------------------------------------------
 # Thing deletion
 #-----------------------------------------------------------
 @app.get("/delete/<int:id>")
-def deleteThing(id):
-    client = connect_db()
-    client.execute("DELETE FROM things WHERE id=?", [id])
-
+def delete_thing(id):
     return redirect("/")
 
 
@@ -69,5 +64,5 @@ def deleteThing(id):
 # 404 error handler
 #-----------------------------------------------------------
 @app.errorhandler(404)
-def notFound(error):
+def not_found(error):
     return render_template("pages/404.jinja")
